@@ -42,7 +42,7 @@ export function HeroSection({ profile, siteSettings }: HeroSectionProps) {
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 text-center flex flex-col items-center px-6"
       >
-        <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-[6.5rem] leading-[1.1] text-black tracking-tight mb-4">
+        <h1 className="font-display font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-[5rem] leading-[1.1] text-black tracking-tight mb-4">
           {titleLines.map((line, i) => (
             <span key={i}>
               {i > 0 && <br />}
