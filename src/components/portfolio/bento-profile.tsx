@@ -163,7 +163,7 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
                 <p className="text-zinc-300 text-sm font-medium mb-5">
                   {profile?.role_title || 'Developer'}
                 </p>
-                <p className="text-zinc-100 text-sm leading-relaxed max-w-lg mb-8 text-justify">
+                <p className="text-zinc-100 text-sm leading-relaxed max-w-full lg:max-w-3xl mb-8 text-justify">
                   {profile?.bio || 'Bio belum diisi.'}
                 </p>
   
