@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import type { Profile } from '@/lib/types'
 
 interface HeroSectionProps {
@@ -29,7 +30,7 @@ export function HeroSection({ profile, siteSettings }: HeroSectionProps) {
 
       {/* Top Label */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4">
-        <img src="/logo.webp" alt="Logo" className="w-6 h-6 object-contain opacity-80" />
+        <Image src="/logo.webp" alt="Logo" width={24} height={24} className="object-contain opacity-80" />
         <span className="text-[9px] uppercase tracking-[0.4em] text-zinc-400 font-bold">
           {profile?.hero_tagline || 'Digital Portofolio'}
         </span>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import { ChevronRight, Code, UserPlus, Calendar, Activity, Clock } from 'lucide-react'
 import { GithubIcon } from '@/components/icons'
 import type { ProjectWithDetails, ProjectCategory } from '@/lib/types'
@@ -59,7 +60,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
       if (cached) {
         const { data, timestamp } = JSON.parse(cached)
         if (Date.now() - timestamp < CACHE_TTL) {
-          setGithubStats(data)
+          setTimeout(() => setGithubStats(data), 0)
           return
         }
       }
@@ -212,11 +213,12 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
                 >
                   <div className="relative aspect-[4/3] rounded-lg overflow-hidden mb-4 bg-zinc-900 border border-white/5">
                     {project.image_url ? (
-                      <img 
+                      <Image 
                         src={project.image_url} 
                         alt={project.title} 
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" 
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105" 
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center text-zinc-600 text-[10px] font-bold uppercase tracking-widest">No Preview</div>

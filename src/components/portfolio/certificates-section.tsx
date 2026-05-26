@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import type { Certificate } from '@/lib/types'
 
 interface CertificatesSectionProps {
@@ -68,11 +69,12 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
               >
                 <div className="w-full aspect-[4/3] bg-white/5 rounded-lg mb-3 overflow-hidden border border-white/5 relative">
                   {cert.image_url ? (
-                    <img 
+                    <Image 
                       src={cert.image_url} 
                       alt={cert.title} 
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-all duration-300 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-zinc-600 text-xs font-bold">No Image</div>

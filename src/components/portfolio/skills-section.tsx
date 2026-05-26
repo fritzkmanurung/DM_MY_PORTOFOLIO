@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { Technology } from '@/lib/types'
 
 interface SkillsSectionProps {
@@ -29,7 +30,7 @@ export function SkillsSection({ technologies }: SkillsSectionProps) {
               className="flex items-center gap-3 bg-white/5 border border-white/5 pl-8 pr-12 py-4 rounded-xl hover:border-white/20 transition-colors group"
             >
               {tech.icon_url ? (
-                <img src={tech.icon_url} alt={tech.name} className="w-6 h-6 grayscale opacity-50 brightness-200 group-hover:opacity-100 group-hover:grayscale-0 transition-all" />
+                <Image src={tech.icon_url} alt={tech.name} width={24} height={24} className="grayscale opacity-50 brightness-200 group-hover:opacity-100 group-hover:grayscale-0 transition-all" />
               ) : (
                 <div className="w-6 h-6 rounded bg-white/10 flex items-center justify-center text-[8px] font-bold text-white/40">
                   {tech.name.slice(0, 2)}

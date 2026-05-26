@@ -1,6 +1,8 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { MapPin, Mail, User, CheckCircle2 } from 'lucide-react'
 import type { Profile, Education, Technology, Skill } from '@/lib/types'
 
@@ -15,15 +17,19 @@ interface BentoProfileProps {
 }
 
 export function BentoProfile({ profile, resumeUrl, educations, technologies, skills, siteSettings }: BentoProfileProps) {
+  const [age, setAge] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (profile?.birth_date) {
+      const calculatedAge = Math.floor((Date.now() - new Date(profile.birth_date).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+      setTimeout(() => setAge(calculatedAge), 0)
+    }
+  }, [profile?.birth_date])
+
   const profileImage = profile?.avatar_url || '/placeholder-avatar.png'
   const profileImage2 = profile?.avatar_url_2 || profileImage
   const name = profile?.full_name || 'Your Name'
   const firstName = name.split(' ')[0]
-
-  // Calculate age dynamically from birth_date
-  const age = profile?.birth_date 
-    ? Math.floor((Date.now() - new Date(profile.birth_date).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
-    : null
 
   // Get unique categories for skills display — show first 6 technologies
   const displayTechnologies = technologies.slice(0, 6)
@@ -119,10 +125,13 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
   
               {/* Center: Profile Photo */}
               <div className="flex-shrink-0 relative self-center lg:self-auto mx-auto lg:mx-4">
-                <img
+                <Image
                   src={profileImage}
                   alt={name}
-                  className="h-[250px] sm:h-[350px] md:h-[420px] object-contain object-bottom drop-shadow-2xl"
+                  width={400}
+                  height={420}
+                  priority
+                  className="h-[250px] sm:h-[350px] md:h-[420px] w-auto object-contain object-bottom drop-shadow-2xl"
                 />
                 {/* Signature overlay */}
                 <div className="absolute bottom-16 left-1/2 -translate-x-1/2 font-serif italic text-4xl text-white drop-shadow-lg whitespace-nowrap opacity-80">
@@ -149,10 +158,12 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
   
             {/* Left: Photo (different angle, side view) */}
             <div className="lg:w-[30%] relative min-h-[300px] overflow-hidden flex items-end border-b lg:border-b-0 lg:border-r border-white/5 pr-0 lg:pr-8">
-              <img
+              <Image
                 src={profileImage2}
                 alt={name}
-                className="w-full h-full object-cover object-top opacity-80"
+                fill
+                sizes="(max-width: 1024px) 100vw, 30vw"
+                className="object-cover object-top opacity-80"
               />
             </div>
   
@@ -250,10 +261,12 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
           
           {/* MOBILE BLOCK 1: Bio over Primary Photo */}
           <div className="relative w-full bg-[#0f0f11] text-white">
-            <img 
+            <Image 
               src={profileImage} 
               alt={name} 
-              className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" 
+              fill
+              sizes="100vw"
+              className="object-cover opacity-15 pointer-events-none" 
             />
             {/* Optional gradient overlay to ensure text readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f11] via-[#0f0f11]/60 to-[#0f0f11]/20 pointer-events-none"></div>
@@ -327,10 +340,12 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
 
           {/* MOBILE BLOCK 2: Education over Secondary Photo */}
           <div className="relative w-full bg-[#09090b] text-white border-t border-white/5">
-            <img 
+            <Image 
               src={profileImage2} 
               alt={name} 
-              className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" 
+              fill
+              sizes="100vw"
+              className="object-cover opacity-15 pointer-events-none" 
             />
             <div className="absolute inset-0 bg-[#09090b]/40 pointer-events-none"></div>
 
