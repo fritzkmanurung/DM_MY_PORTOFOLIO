@@ -54,7 +54,7 @@ export function FooterSection({ profile, siteSettings }: FooterSectionProps) {
         <div className="md:w-[35%] flex flex-col gap-8">
           <div>
             <div className="flex items-center gap-3">
-              <Image src="/logo.webp" alt="Logo" width={48} height={48} className="rounded-2xl object-contain shadow-[0_0_20px_rgba(255,255,255,0.1)] bg-white p-2" />
+              <Image src="/profile/logo.webp" alt="Logo" width={48} height={48} className="rounded-2xl object-contain shadow-[0_0_20px_rgba(255,255,255,0.1)] bg-white p-2" />
               <div className="flex flex-col">
                 <span className="text-xl font-bold tracking-tighter leading-none">{fullName}</span>
                 <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 mt-1 font-bold">{roleTitle}</span>

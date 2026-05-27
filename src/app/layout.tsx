@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: "Portfolio",
   description: "My personal portfolio",
   icons: {
-    icon: "/icon.webp",
+    icon: "/profile/favicon.webp",
   },
 };
 
