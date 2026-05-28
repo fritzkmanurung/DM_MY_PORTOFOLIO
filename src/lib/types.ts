@@ -51,6 +51,7 @@ export interface Technology {
   name: string
   icon_url: string | null
   category: string
+  sort_order: number
 }
 
 export interface ProjectTech {
@@ -187,6 +188,7 @@ export interface TechnologyFormData {
   name: string
   icon_url: string
   category: string
+  sort_order: number
 }
 
 export interface ProjectCategoryFormData {

@@ -31,8 +31,17 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
   const name = profile?.full_name || 'Your Name'
   const firstName = name.split(' ')[0]
 
-  // Get unique categories for skills display — show first 6 technologies
-  const displayTechnologies = technologies.slice(0, 6)
+  // Get exactly 7 technologies: 2 Backend, 1 Database, 1 AI/ML, 1 Frontend, 2 Tools
+  const getDisplayTechnologies = () => {
+    const backend = technologies.filter(t => t.category === 'Backend').slice(0, 2)
+    const database = technologies.filter(t => t.category === 'Database').slice(0, 1)
+    const aiml = technologies.filter(t => t.category === 'AI/ML').slice(0, 1)
+    const frontend = technologies.filter(t => t.category === 'Frontend').slice(0, 1)
+    const tools = technologies.filter(t => t.category === 'Tools').slice(0, 2)
+    return [...backend, ...database, ...aiml, ...frontend, ...tools]
+  }
+
+  const displayTechnologies = getDisplayTechnologies()
 
   // Format name for background display
   const nameParts = name.toUpperCase().split(' ')

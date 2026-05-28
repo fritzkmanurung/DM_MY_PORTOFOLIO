@@ -248,8 +248,7 @@ export async function getTechnologies() {
   const { data, error } = await supabase
     .from('technologies')
     .select('*')
-    .order('category', { ascending: true })
-    .order('name', { ascending: true })
+    .order('sort_order', { ascending: true })
 
   if (error) throw new Error(error.message)
   return data ?? []

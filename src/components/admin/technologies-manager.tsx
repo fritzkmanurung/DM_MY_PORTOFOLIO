@@ -23,7 +23,7 @@ import { Label } from '@/components/ui/label'
 import { Plus, Pencil, Trash2, Cpu, Save } from 'lucide-react'
 import type { Technology, TechnologyFormData } from '@/lib/types'
 
-const CATEGORIES = ['Frontend', 'Backend', 'Database', 'DevOps', 'Tools', 'Other']
+const CATEGORIES = ['Backend', 'Database', 'AI/ML', 'Frontend', 'Tools', 'Design', 'Other']
 
 interface TechnologiesManagerProps {
   technologies: Technology[]
@@ -34,11 +34,11 @@ export function TechnologiesManager({ technologies }: TechnologiesManagerProps) 
   const [editingTech, setEditingTech] = useState<Technology | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [category, setCategory] = useState('Frontend')
+  const [category, setCategory] = useState('Backend')
 
   function openCreate() {
     setEditingTech(null)
-    setCategory('Frontend')
+    setCategory('Backend')
     setFormOpen(true)
   }
 
@@ -54,6 +54,7 @@ export function TechnologiesManager({ technologies }: TechnologiesManagerProps) 
       name: formData.get('name') as string,
       icon_url: formData.get('icon_url') as string,
       category,
+      sort_order: Number(formData.get('sort_order')) || 0,
     }
 
     try {
@@ -183,6 +184,13 @@ export function TechnologiesManager({ technologies }: TechnologiesManagerProps) 
                 </SelectContent>
               </Select>
             </div>
+            <FormField
+              label="Urutan"
+              name="sort_order"
+              type="number"
+              defaultValue={editingTech?.sort_order?.toString() ?? '0'}
+              placeholder="0"
+            />
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={() => setFormOpen(false)}>
                 Batal
