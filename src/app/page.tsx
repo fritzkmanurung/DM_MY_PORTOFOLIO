@@ -2,7 +2,6 @@ import { getProfile, getProjects, getTechnologies, getExperiences, getActiveResu
 import { HeroSection } from '@/components/portfolio/hero-section'
 import { BentoProfile } from '@/components/portfolio/bento-profile'
 import { ProjectsSection } from '@/components/portfolio/projects-section'
-import { SkillsSection } from '@/components/portfolio/skills-section'
 import { CertificatesSection } from '@/components/portfolio/certificates-section'
 import { ExperienceSection } from '@/components/portfolio/experience-section'
 import { ServicesSection } from '@/components/portfolio/services-section'
@@ -57,10 +56,6 @@ export default async function HomePage() {
           <ProjectsSection projects={projects} categories={projectCategories} githubUsername={profile?.github_username ?? null} />
         )}
         
-        {/* Skills Section */}
-        {isVisible('section_skills') && technologies && technologies.length > 0 && (
-          <SkillsSection technologies={technologies} />
-        )}
 
         {/* Certificates & Achievements */}
         {isVisible('section_certificates') && certificates && certificates.length > 0 && (
@@ -74,7 +69,7 @@ export default async function HomePage() {
 
         {/* Services Section */}
         {isVisible('section_services') && services && services.length > 0 && (
-          <ServicesSection services={services} technologies={technologies} />
+          <ServicesSection services={services} />
         )}
 
         {/* FAQ Section */}

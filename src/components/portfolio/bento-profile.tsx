@@ -3,8 +3,64 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { MapPin, Mail, User, CheckCircle2 } from 'lucide-react'
+import { MapPin, Mail, CheckCircle2 } from 'lucide-react'
 import type { Profile, Education, Technology, Skill } from '@/lib/types'
+
+function getTechIconUrl(name: string): string {
+  const normalized = name.toLowerCase().trim();
+  const mappings: Record<string, string> = {
+    'next.js': 'nextdotjs',
+    'nextjs': 'nextdotjs',
+    'node.js': 'nodedotjs',
+    'nodejs': 'nodedotjs',
+    'vue.js': 'vuedotjs',
+    'vuejs': 'vuedotjs',
+    'express.js': 'express',
+    'expressjs': 'express',
+    'tailwind css': 'tailwindcss',
+    'tailwindcss': 'tailwindcss',
+    'vs code': 'visualstudiocode',
+    'vscode': 'visualstudiocode',
+    'c++': 'cplusplus',
+    'c#': 'csharp',
+    'react.js': 'react',
+    'reactjs': 'react',
+    'three.js': 'threedotjs',
+    'threejs': 'threedotjs',
+    'framer motion': 'framer',
+    'chatgpt': 'openai',
+    'artificial intelligence': 'openai',
+    'ai': 'openai',
+    'machine learning': 'scikitlearn',
+    'fastapi': 'fastapi',
+    'supabase': 'supabase',
+    'postgresql': 'postgresql',
+    'postgres': 'postgresql',
+    'mongodb': 'mongodb',
+    'mysql': 'mysql',
+    'git': 'git',
+    'github': 'github',
+    'html': 'html5',
+    'css': 'css3',
+    'javascript': 'javascript',
+    'typescript': 'typescript',
+    'python': 'python',
+    'figma': 'figma',
+    'docker': 'docker',
+  };
+
+  if (mappings[normalized]) {
+    return `https://cdn.simpleicons.org/${mappings[normalized]}`;
+  }
+
+  const slug = normalized
+    .replace(/\.js$/, 'dotjs')
+    .replace(/\+/g, 'plus')
+    .replace(/\s+/g, '')
+    .replace(/[^a-z0-9]/g, '');
+
+  return `https://cdn.simpleicons.org/${slug}`;
+}
 
 
 interface BentoProfileProps {
@@ -31,14 +87,58 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
   const name = profile?.full_name || 'Your Name'
   const firstName = name.split(' ')[0]
 
-  // Get exactly 8 technologies: 3 Backend, 1 Database, 1 AI/ML, 1 Frontend, 2 Tools
+  // Get exactly the requested technologies: 3 Backend (Laravel, CodeIgniter 4, Flask), 1 Database (MySQL), 1 AI/ML, 1 Frontend, 2 Tools (Git, GitHub)
+  // And sort them by category: Backend, Database, AI/ML, Frontend, Tools, Design
   const getDisplayTechnologies = () => {
-    const backend = technologies.filter(t => t.category === 'Backend').slice(0, 3)
-    const database = technologies.filter(t => t.category === 'Database').slice(0, 1)
-    const aiml = technologies.filter(t => t.category === 'AI/ML').slice(0, 1)
+    const backend = technologies.filter(t => 
+      t.category === 'Backend' && 
+      ['laravel', 'codeigniter 4', 'flask'].includes(t.name.toLowerCase())
+    )
+    if (backend.length < 3) {
+      const extra = technologies.filter(t => t.category === 'Backend' && !backend.includes(t))
+      backend.push(...extra.slice(0, 3 - backend.length))
+    }
+
+    const database = technologies.filter(t => 
+      t.category === 'Database' && 
+      t.name.toLowerCase() === 'mysql'
+    ).slice(0, 1)
+    if (database.length === 0) {
+      database.push(...technologies.filter(t => t.category === 'Database').slice(0, 1))
+    }
+
+
+    
     const frontend = technologies.filter(t => t.category === 'Frontend').slice(0, 1)
-    const tools = technologies.filter(t => t.category === 'Tools').slice(0, 2)
-    return [...backend, ...database, ...aiml, ...frontend, ...tools]
+
+    const tools = technologies.filter(t => 
+      t.category === 'Tools' && 
+      ['git', 'github'].includes(t.name.toLowerCase())
+    )
+    if (tools.length < 2) {
+      const extra = technologies.filter(t => t.category === 'Tools' && !tools.includes(t))
+      tools.push(...extra.slice(0, 2 - tools.length))
+    }
+
+    const selected = [...backend, ...database, ...frontend, ...tools]
+
+    const catPriority: Record<string, number> = {
+      'Backend': 1,
+      'Database': 2,
+      'AI/ML': 3,
+      'Frontend': 4,
+      'Tools': 5,
+      'Design': 6
+    }
+
+    selected.sort((a, b) => {
+      const pA = catPriority[a.category || ''] || 99
+      const pB = catPriority[b.category || ''] || 99
+      if (pA !== pB) return pA - pB
+      return (a.sort_order || 0) - (b.sort_order || 0)
+    })
+
+    return selected
   }
 
   const displayTechnologies = getDisplayTechnologies()
@@ -193,8 +293,16 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
                     <p className="text-[10px] uppercase font-bold mb-3 text-zinc-500 tracking-widest">Tech Stack :</p>
                     <div className="flex flex-wrap gap-2.5">
                       {displayTechnologies.map((tech) => (
-                        <div key={tech.id} className="px-3 py-2 bg-white/5 backdrop-blur-md rounded-lg flex items-center justify-center text-[10px] font-bold text-zinc-100 border border-white/10" title={tech.name}>
-                          {tech.name}
+                        <div key={tech.id} className="px-3 py-2 bg-white/5 backdrop-blur-md rounded-lg flex items-center gap-2 text-[10px] font-bold text-zinc-100 border border-white/10 group cursor-default hover:border-white/20 transition-colors" title={tech.name}>
+                          <img 
+                            src={getTechIconUrl(tech.name)} 
+                            alt={tech.name} 
+                            className="w-3.5 h-3.5 object-contain grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all brightness-200" 
+                            onError={(e) => {
+                              (e.target as HTMLElement).style.display = 'none';
+                            }}
+                          />
+                          <span>{tech.name}</span>
                         </div>
                       ))}
                     </div>
@@ -221,10 +329,10 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
               <div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6 pt-5 border-t border-white/10">
                   <div className="flex gap-3">
-                    <User className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
+                    <Mail className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-[8px] uppercase text-zinc-400 font-bold tracking-widest">Nama Lengkap</p>
-                      <p className="text-sm font-bold text-white">{name}</p>
+                      <p className="text-[8px] uppercase text-zinc-400 font-bold tracking-widest">Email</p>
+                      <p className="text-sm font-bold text-white">{profile?.email || '-'}</p>
                     </div>
                   </div>
                   <div className="flex gap-3">
@@ -232,13 +340,6 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
                     <div>
                       <p className="text-[8px] uppercase text-zinc-400 font-bold tracking-widest">Lokasi</p>
                       <p className="text-sm font-bold text-white">{profile?.location || '-'}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <Mail className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-[8px] uppercase text-zinc-400 font-bold tracking-widest">Email</p>
-                      <p className="text-sm font-bold text-white">{profile?.email || '-'}</p>
                     </div>
                   </div>
                 </div>
@@ -295,8 +396,16 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
                   <p className="text-[10px] uppercase font-bold mb-3 text-zinc-400 tracking-widest">Tech Stack :</p>
                   <div className="flex flex-wrap gap-2.5">
                     {displayTechnologies.map((tech) => (
-                      <div key={tech.id} className="px-3 py-2 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-[10px] font-bold text-zinc-100 border border-white/10" title={tech.name}>
-                        {tech.name}
+                      <div key={tech.id} className="px-3 py-2 bg-white/10 backdrop-blur-sm rounded-lg flex items-center gap-2 text-[10px] font-bold text-zinc-100 border border-white/10 group" title={tech.name}>
+                        <img 
+                          src={getTechIconUrl(tech.name)} 
+                          alt={tech.name} 
+                          className="w-3.5 h-3.5 object-contain grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all brightness-200" 
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                        <span>{tech.name}</span>
                       </div>
                     ))}
                   </div>
@@ -318,13 +427,12 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
                 </div>
               )}
 
-              {/* Contact Info Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8 pt-6 border-t border-white/10">
                 <div className="flex gap-3">
-                  <User className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
+                  <Mail className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-[8px] uppercase text-zinc-400 font-bold tracking-widest">Nama Lengkap</p>
-                    <p className="text-sm font-bold text-white">{name}</p>
+                    <p className="text-[8px] uppercase text-zinc-400 font-bold tracking-widest">Email</p>
+                    <p className="text-sm font-bold text-white">{profile?.email || '-'}</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -332,13 +440,6 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
                   <div>
                     <p className="text-[8px] uppercase text-zinc-400 font-bold tracking-widest">Lokasi</p>
                     <p className="text-sm font-bold text-white">{profile?.location || '-'}</p>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <Mail className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-[8px] uppercase text-zinc-400 font-bold tracking-widest">Email</p>
-                    <p className="text-sm font-bold text-white">{profile?.email || '-'}</p>
                   </div>
                 </div>
               </div>
