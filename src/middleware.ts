@@ -5,10 +5,11 @@ export async function middleware(request: NextRequest) {
   // Refresh session and get the reusable supabase client
   const { response, supabase } = await updateSession(request)
 
+  // Get user once, reuse for all checks
+  const { data: { user } } = await supabase.auth.getUser()
+
   // Protect /admin routes — redirect to /login if not authenticated
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    const { data: { user } } = await supabase.auth.getUser()
-
     if (!user) {
       const loginUrl = new URL('/portal-rahasia', request.url)
       loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
@@ -18,8 +19,6 @@ export async function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from /portal-rahasia
   if (request.nextUrl.pathname === '/portal-rahasia') {
-    const { data: { user } } = await supabase.auth.getUser()
-
     if (user) {
       return NextResponse.redirect(new URL('/admin', request.url))
     }

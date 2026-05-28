@@ -40,7 +40,7 @@ export function MobileNav({ siteSettings }: MobileNavProps) {
         setActiveSection('hero')
       }
     }
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
       observer.disconnect()

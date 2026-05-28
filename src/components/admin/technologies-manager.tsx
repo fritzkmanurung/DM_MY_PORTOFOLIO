@@ -35,16 +35,19 @@ export function TechnologiesManager({ technologies }: TechnologiesManagerProps) 
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [category, setCategory] = useState('Backend')
+  const [error, setError] = useState<string | null>(null)
 
   function openCreate() {
     setEditingTech(null)
     setCategory('Backend')
+    setError(null)
     setFormOpen(true)
   }
 
   function openEdit(tech: Technology) {
     setEditingTech(tech)
     setCategory(tech.category)
+    setError(null)
     setFormOpen(true)
   }
 
@@ -64,8 +67,9 @@ export function TechnologiesManager({ technologies }: TechnologiesManagerProps) 
         await createTechnology(data)
       }
       setFormOpen(false)
-    } catch {
-      // Handle error
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menyimpan teknologi')
     } finally {
       setLoading(false)
     }
@@ -76,8 +80,9 @@ export function TechnologiesManager({ technologies }: TechnologiesManagerProps) 
     setLoading(true)
     try {
       await deleteTechnology(deleteId)
-    } catch {
-      // Handle error
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menghapus teknologi')
     } finally {
       setLoading(false)
       setDeleteId(null)
@@ -94,6 +99,11 @@ export function TechnologiesManager({ technologies }: TechnologiesManagerProps) 
 
   return (
     <>
+      {error && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive mb-4">
+          {error}
+        </div>
+      )}
       {technologies.length === 0 ? (
         <EmptyState
           icon={<Cpu className="h-12 w-12" />}

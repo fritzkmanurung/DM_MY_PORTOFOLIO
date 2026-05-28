@@ -67,7 +67,7 @@ export function CertificatesManager({ certificates }: CertificatesManagerProps) 
         <Button onClick={() => { setShowForm(true); setEditingId(null); setImageUrl('') }} className="gap-2"><Plus className="h-4 w-4" /> Tambah Sertifikat</Button>
       </div>
       {(showForm || editingId) && (
-        <Card><CardHeader><CardTitle>{editingId ? 'Edit Sertifikat' : 'Tambah Sertifikat Baru'}</CardTitle></CardHeader>
+        <Card key={editingId ?? 'new'}><CardHeader><CardTitle>{editingId ? 'Edit Sertifikat' : 'Tambah Sertifikat Baru'}</CardTitle></CardHeader>
           <CardContent>
             <form action={handleSubmit} className="space-y-4">
               <ImageUpload label="Gambar Sertifikat" currentUrl={editingItem?.image_url} onUpload={(url) => setImageUrl(url)} folder="certificates" />

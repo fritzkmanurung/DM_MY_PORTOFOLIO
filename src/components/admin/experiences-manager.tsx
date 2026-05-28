@@ -23,14 +23,17 @@ export function ExperiencesManager({ experiences }: ExperiencesManagerProps) {
   const [editing, setEditing] = useState<Experience | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   function openCreate() {
     setEditing(null)
+    setError(null)
     setFormOpen(true)
   }
 
   function openEdit(exp: Experience) {
     setEditing(exp)
+    setError(null)
     setFormOpen(true)
   }
 
@@ -52,8 +55,9 @@ export function ExperiencesManager({ experiences }: ExperiencesManagerProps) {
         await createExperience(data)
       }
       setFormOpen(false)
-    } catch {
-      // Handle error
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menyimpan pengalaman')
     } finally {
       setLoading(false)
     }
@@ -64,8 +68,9 @@ export function ExperiencesManager({ experiences }: ExperiencesManagerProps) {
     setLoading(true)
     try {
       await deleteExperience(deleteId)
-    } catch {
-      // Handle error
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menghapus pengalaman')
     } finally {
       setLoading(false)
       setDeleteId(null)
@@ -79,6 +84,11 @@ export function ExperiencesManager({ experiences }: ExperiencesManagerProps) {
 
   return (
     <>
+      {error && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive mb-4">
+          {error}
+        </div>
+      )}
       {experiences.length === 0 ? (
         <EmptyState
           icon={<Briefcase className="h-12 w-12" />}

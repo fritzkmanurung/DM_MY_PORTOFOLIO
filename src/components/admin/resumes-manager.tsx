@@ -28,10 +28,20 @@ export function ResumesManager({ resumes }: ResumesManagerProps) {
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleUpload() {
     if (!file) return
+
+    // S8: File size validation (max 5MB)
+    const MAX_SIZE = 5 * 1024 * 1024 // 5MB
+    if (file.size > MAX_SIZE) {
+      setError(`Ukuran file terlalu besar (${(file.size / 1024 / 1024).toFixed(1)}MB). Maksimal 5MB.`)
+      return
+    }
+
     setUploading(true)
+    setError(null)
 
     try {
       const supabase = createClient()
@@ -50,7 +60,7 @@ export function ResumesManager({ resumes }: ResumesManagerProps) {
       setUploadOpen(false)
       setFile(null)
     } catch (err) {
-      console.error('Upload failed:', err)
+      setError(err instanceof Error ? err.message : 'Gagal mengupload file')
     } finally {
       setUploading(false)
     }
@@ -60,8 +70,9 @@ export function ResumesManager({ resumes }: ResumesManagerProps) {
     setLoading(true)
     try {
       await setActiveResume(id)
-    } catch {
-      // Handle error
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal mengaktifkan resume')
     } finally {
       setLoading(false)
     }
@@ -72,8 +83,9 @@ export function ResumesManager({ resumes }: ResumesManagerProps) {
     setLoading(true)
     try {
       await deleteResume(deleteId)
-    } catch {
-      // Handle error
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menghapus resume')
     } finally {
       setLoading(false)
       setDeleteId(null)
@@ -82,6 +94,11 @@ export function ResumesManager({ resumes }: ResumesManagerProps) {
 
   return (
     <>
+      {error && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive mb-4">
+          {error}
+        </div>
+      )}
       {resumes.length === 0 ? (
         <EmptyState
           icon={<FileText className="h-12 w-12" />}

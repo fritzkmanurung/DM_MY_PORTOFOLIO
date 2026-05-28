@@ -57,7 +57,7 @@ export function SkillsManager({ skills }: SkillsManagerProps) {
         <Button onClick={() => { setShowForm(true); setEditingId(null) }} className="gap-2"><Plus className="h-4 w-4" /> Tambah Skill</Button>
       </div>
       {(showForm || editingId) && (
-        <Card><CardHeader><CardTitle>{editingId ? 'Edit Skill' : 'Tambah Skill Baru'}</CardTitle></CardHeader>
+        <Card key={editingId ?? 'new'}><CardHeader><CardTitle>{editingId ? 'Edit Skill' : 'Tambah Skill Baru'}</CardTitle></CardHeader>
           <CardContent>
             <form action={handleSubmit} className="space-y-4">
               <FormField label="Nama Keahlian" name="name" defaultValue={editingItem?.name ?? ''} placeholder="UI/UX Design" required />

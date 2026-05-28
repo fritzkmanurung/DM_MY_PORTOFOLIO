@@ -78,7 +78,7 @@ export function EducationsManager({ educations }: EducationsManagerProps) {
       </div>
 
       {(showForm || editingId) && (
-        <Card>
+        <Card key={editingId ?? 'new'}>
           <CardHeader>
             <CardTitle>{editingId ? 'Edit Pendidikan' : 'Tambah Pendidikan Baru'}</CardTitle>
           </CardHeader>

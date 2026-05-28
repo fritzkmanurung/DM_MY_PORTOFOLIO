@@ -129,6 +129,16 @@
   html {
     @apply font-sans;
   }
+
+  /* Hide Global Scrollbar (Webkit) */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide Global Scrollbar (Firefox) */
+  html {
+    scrollbar-width: none;
+  }
 }
 
 @layer utilities {
@@ -143,6 +153,13 @@
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     @apply bg-white/20;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 

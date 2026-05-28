@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Certificate } from '@/lib/types'
 
 const formatIssueDate = (dateStr: string) => {
@@ -14,67 +15,180 @@ const formatIssueDate = (dateStr: string) => {
   }
 }
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+    }
+  }
+} as const
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1,
+    transition: {
+      type: "spring" as const,
+      stiffness: 90,
+      damping: 15
+    }
+  }
+} as const
+
 interface CertificatesSectionProps {
   certificates: Certificate[]
 }
 
 export function CertificatesSection({ certificates }: CertificatesSectionProps) {
-  const firstCardRef = useRef<HTMLDivElement>(null)
-  const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [isMounted, setIsMounted] = useState(false)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true)
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null)
 
-  const needsScroll = certificates.length > 4
-
-  // Measure height of one card, then set container to fit exactly 2 rows + gap
   useEffect(() => {
-    if (!needsScroll || !firstCardRef.current) return
+    setIsMounted(true)
+  }, [])
 
-    const measure = () => {
-      const card = firstCardRef.current
-      if (!card) return
-      const cardHeight = card.getBoundingClientRect().height
-      // 2 rows of cards + 1 gap (20px from gap-5)
-      setContainerHeight(cardHeight * 2 + 20)
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
+      setCanScrollLeft(scrollLeft > 5)
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 5)
+    }
+  }
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el) {
+      el.addEventListener('scroll', checkScroll, { passive: true })
+      checkScroll()
+      const timer = setTimeout(checkScroll, 300)
+      window.addEventListener('resize', checkScroll)
+      return () => {
+        el.removeEventListener('scroll', checkScroll)
+        window.removeEventListener('resize', checkScroll)
+        clearTimeout(timer)
+      }
+    }
+  }, [certificates])
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    const el = scrollRef.current
+    if (!el) return
+
+    const children = Array.from(el.children) as HTMLElement[]
+    if (children.length === 0) return
+
+    const containerLeft = el.getBoundingClientRect().left
+    const scrollLeft = el.scrollLeft
+    const targetOffset = direction === 'left' ? -el.clientWidth * 0.75 : el.clientWidth * 0.75
+    const targetScrollLeft = scrollLeft + targetOffset
+
+    // Find the card closest to target position
+    let bestScrollLeft = targetScrollLeft
+    let minDiff = Infinity
+
+    children.forEach((child) => {
+      const childScrollLeft = scrollLeft + (child.getBoundingClientRect().left - containerLeft)
+      const diff = Math.abs(childScrollLeft - targetScrollLeft)
+      if (diff < minDiff) {
+        minDiff = diff
+        bestScrollLeft = childScrollLeft
+      }
+    })
+
+    // Clamp the target scroll position
+    const maxScroll = el.scrollWidth - el.clientWidth
+    const finalScrollLeft = Math.max(0, Math.min(bestScrollLeft, maxScroll))
+
+    // Smooth ease-out cubic scroll animation
+    const start = el.scrollLeft
+    const change = finalScrollLeft - start
+    const startTime = performance.now()
+    const duration = 500 // ms
+
+    const originalSnap = el.style.scrollSnapType
+    const originalBehavior = el.style.scrollBehavior
+    el.style.scrollSnapType = 'none'
+    el.style.scrollBehavior = 'auto'
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime
+      const progress = Math.min(elapsed / duration, 1)
+
+      // Ease-out cubic curve
+      const ease = 1 - Math.pow(1 - progress, 3)
+      el.scrollLeft = start + change * ease
+
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        el.style.scrollSnapType = originalSnap
+        el.style.scrollBehavior = originalBehavior
+      }
     }
 
-    // Measure after images load
-    const timer = setTimeout(measure, 500)
-    window.addEventListener('resize', measure)
-    return () => {
-      clearTimeout(timer)
-      window.removeEventListener('resize', measure)
-    }
-  }, [needsScroll])
+    requestAnimationFrame(animate)
+  }
 
   return (
-    <section className="w-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10 flex flex-col lg:flex-row bg-[#121214]/50 backdrop-blur-lg" id="certificates">
+    <div className="w-full flex flex-col gap-8" id="certificates">
+      {/* Section Header (Centered, Outside) */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-center space-y-4"
+      >
+        <p className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">Pencapaian</p>
+        <h2 className="text-3xl md:text-5xl font-bold tracking-tight font-serif italic text-white">Sertifikat</h2>
+      </motion.div>
 
-      {/* LEFT SIDE (DARK TITLE) */}
-      <div className="lg:w-[30%] bg-[#09090b]/80 text-white p-8 md:p-12 flex flex-col justify-center min-h-[250px] lg:min-h-[400px] border-r border-white/10 backdrop-blur-md">
-        <div>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight font-serif italic mb-4">Sertifikat</h2>
-          <div className="w-12 h-0.5 bg-white/30 mb-6"></div>
-          <p className="text-zinc-300 text-sm leading-relaxed">
-            Beberapa sertifikat yang pernah saya peroleh selama ini.
-          </p>
+      {/* Slider Area (Unboxed, matching Projects card section width) */}
+      <div className="w-full relative flex flex-col">
+        
+        {/* Navigation Arrows (Apple/Airbnb Style at Top Right) */}
+        <div className="flex justify-end gap-2 mb-4 z-10">
+          <button
+            type="button"
+            onClick={() => handleScroll('left')}
+            disabled={isMounted ? !canScrollLeft : false}
+            className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-white/5 disabled:hover:text-zinc-400 disabled:cursor-not-allowed transition-all cursor-pointer"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => handleScroll('right')}
+            disabled={isMounted ? !canScrollRight : false}
+            className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-20 disabled:hover:bg-white/5 disabled:hover:text-zinc-400 disabled:cursor-not-allowed transition-all cursor-pointer"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
-      </div>
 
-      {/* RIGHT (CERTIFICATE GRID) */}
-      <div className="lg:w-[70%] bg-[#0f0f11]/40 p-6 md:p-8 flex flex-col justify-center backdrop-blur-sm">
-        <div 
-          className={needsScroll && containerHeight ? 'overflow-y-auto pr-2 custom-scrollbar' : ''}
-          style={needsScroll && containerHeight ? { maxHeight: containerHeight } : undefined}
+        {/* Scrollable Container with Snapping */}
+        <motion.div 
+          ref={scrollRef}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-5 pb-6 no-scrollbar"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {certificates.map((cert, idx) => (
-              <motion.div
-                ref={idx === 0 ? firstCardRef : undefined}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                key={cert.id}
+          {certificates.map((cert) => (
+            <motion.div
+              variants={cardVariants}
+              key={cert.id}
+              className="w-[250px] sm:w-[290px] flex-shrink-0 snap-start h-full py-1"
+            >
+              <div
                 onClick={() => setSelectedCert(cert)}
                 role="button"
                 tabIndex={0}
@@ -84,7 +198,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
                     setSelectedCert(cert)
                   }
                 }}
-                className="bg-[#1c1c1f]/80 backdrop-blur-md border border-white/10 rounded-lg shadow-sm hover:shadow-2xl hover:border-white/20 hover:bg-[#232326]/90 transition-all duration-300 hover:shadow-sky-500/5 group overflow-hidden flex flex-col cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+                className="bg-[#1c1c1f]/80 backdrop-blur-md border border-white/10 rounded-lg shadow-sm hover:shadow-2xl hover:border-white/20 hover:bg-[#232326]/90 transition-all duration-300 hover:shadow-sky-500/5 group overflow-hidden flex flex-col cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500/50 w-full h-full"
               >
                 {/* Image Area with Badge (Full-bleed) */}
                 <div className="w-full aspect-[16/10] bg-zinc-950 border-b border-white/10 overflow-hidden group-hover:border-white/20 transition-colors relative">
@@ -99,7 +213,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
                       src={cert.image_url} 
                       alt={cert.title} 
                       fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      sizes="(max-width: 640px) 100vw, 290px"
                       className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                     />
                   ) : (
@@ -125,10 +239,10 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
                     )}
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
 
       {/* Certificate Zoom Modal */}
@@ -200,6 +314,6 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
           </div>
         )}
       </AnimatePresence>
-    </section>
+    </div>
   )
 }

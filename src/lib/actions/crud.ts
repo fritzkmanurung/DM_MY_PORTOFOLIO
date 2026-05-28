@@ -117,7 +117,8 @@ export async function createProject(formData: ProjectFormData) {
       project_id: data.id,
       tech_id,
     }))
-    await supabase.from('project_techs').insert(techLinks)
+    const { error: techError } = await supabase.from('project_techs').insert(techLinks)
+    if (techError) throw new Error(`Gagal menautkan teknologi: ${techError.message}`)
   }
 
   if (category_ids && category_ids.length > 0) {
@@ -125,7 +126,8 @@ export async function createProject(formData: ProjectFormData) {
       project_id: data.id,
       category_id,
     }))
-    await supabase.from('project_category_links').insert(categoryLinks)
+    const { error: catError } = await supabase.from('project_category_links').insert(categoryLinks)
+    if (catError) throw new Error(`Gagal menautkan kategori: ${catError.message}`)
   }
 
   revalidatePath('/')
@@ -147,23 +149,27 @@ export async function updateProject(id: string, formData: ProjectFormData) {
   if (error) throw new Error(error.message)
 
   // Replace tech links
-  await supabase.from('project_techs').delete().eq('project_id', id)
+  const { error: techDelError } = await supabase.from('project_techs').delete().eq('project_id', id)
+  if (techDelError) throw new Error(`Gagal menghapus teknologi lama: ${techDelError.message}`)
   if (tech_ids && tech_ids.length > 0) {
     const techLinks = tech_ids.map((tech_id) => ({
       project_id: id,
       tech_id,
     }))
-    await supabase.from('project_techs').insert(techLinks)
+    const { error: techInsError } = await supabase.from('project_techs').insert(techLinks)
+    if (techInsError) throw new Error(`Gagal menautkan teknologi: ${techInsError.message}`)
   }
 
   // Replace category links
-  await supabase.from('project_category_links').delete().eq('project_id', id)
+  const { error: catDelError } = await supabase.from('project_category_links').delete().eq('project_id', id)
+  if (catDelError) throw new Error(`Gagal menghapus kategori lama: ${catDelError.message}`)
   if (category_ids && category_ids.length > 0) {
     const categoryLinks = category_ids.map((category_id) => ({
       project_id: id,
       category_id,
     }))
-    await supabase.from('project_category_links').insert(categoryLinks)
+    const { error: catInsError } = await supabase.from('project_category_links').insert(categoryLinks)
+    if (catInsError) throw new Error(`Gagal menautkan kategori: ${catInsError.message}`)
   }
 
   revalidatePath('/')
@@ -262,6 +268,7 @@ export async function createTechnology(formData: TechnologyFormData) {
   const { error } = await supabase.from('technologies').insert(formData)
   if (error) throw new Error(error.message)
 
+  revalidatePath('/')
   revalidatePath('/admin/technologies')
 }
 
@@ -273,6 +280,7 @@ export async function updateTechnology(id: string, formData: TechnologyFormData)
   const { error } = await supabase.from('technologies').update(formData).eq('id', id)
   if (error) throw new Error(error.message)
 
+  revalidatePath('/')
   revalidatePath('/admin/technologies')
 }
 
@@ -284,6 +292,7 @@ export async function deleteTechnology(id: string) {
   const { error } = await supabase.from('technologies').delete().eq('id', id)
   if (error) throw new Error(error.message)
 
+  revalidatePath('/')
   revalidatePath('/admin/technologies')
 }
 
@@ -672,16 +681,19 @@ export async function setActiveResume(id: string) {
   const supabase = await createClient()
 
   // Deactivate all resumes first
-  await supabase
+  const { error: deactivateError } = await supabase
     .from('resumes')
     .update({ is_active: false })
     .eq('profile_id', user.id)
+
+  if (deactivateError) throw new Error(`Gagal menonaktifkan resume: ${deactivateError.message}`)
 
   // Activate the selected one
   const { error } = await supabase
     .from('resumes')
     .update({ is_active: true })
     .eq('id', id)
+    .eq('profile_id', user.id)
 
   if (error) throw new Error(error.message)
   revalidatePath('/')
@@ -696,6 +708,7 @@ export async function deleteResume(id: string) {
   const { error } = await supabase.from('resumes').delete().eq('id', id)
   if (error) throw new Error(error.message)
 
+  revalidatePath('/')
   revalidatePath('/admin/resumes')
 }
 
@@ -731,6 +744,7 @@ export async function updateProjectImage(projectId: string, imageUrl: string) {
     .from('projects')
     .update({ image_url: imageUrl })
     .eq('id', projectId)
+    .eq('profile_id', user.id)
 
   if (error) throw new Error(error.message)
   revalidatePath('/')

@@ -99,8 +99,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             )}
 
             {/* TAB: UTAMA */}
-            {activeTab === 'utama' && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className={activeTab === 'utama' ? 'space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300' : 'hidden'}>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <FormField
                     label="Nama Lengkap"
@@ -156,12 +155,10 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                     placeholder="username (tanpa @)"
                   />
                 </div>
-              </div>
-            )}
+            </div>
 
             {/* TAB: MEDIA */}
-            {activeTab === 'media' && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className={activeTab === 'media' ? 'space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300' : 'hidden'}>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <ImageUpload
                     label="Foto Profil Utama"
@@ -176,12 +173,10 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                     folder="avatars"
                   />
                 </div>
-              </div>
-            )}
+            </div>
 
             {/* TAB: HERO */}
-            {activeTab === 'hero' && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className={activeTab === 'hero' ? 'space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300' : 'hidden'}>
                 <FormField
                   label="Judul Hero"
                   name="hero_title"
@@ -204,12 +199,10 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                   defaultValue={profile?.hero_tagline ?? ''}
                   placeholder="Contoh: Digital Portofolio"
                 />
-              </div>
-            )}
+            </div>
 
             {/* TAB: SOCIAL */}
-            {activeTab === 'social' && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className={activeTab === 'social' ? 'space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300' : 'hidden'}>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <FormField
                     label="GitHub URL"
@@ -243,8 +236,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
                     placeholder="https://instagram.com/username"
                   />
                 </div>
-              </div>
-            )}
+            </div>
 
             <Separator />
             

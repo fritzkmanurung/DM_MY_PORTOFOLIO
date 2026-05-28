@@ -31,14 +31,16 @@ interface ProjectsTableProps {
 export function ProjectsTable({ projects }: ProjectsTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleDelete() {
     if (!deleteId) return
     setLoading(true)
     try {
       await deleteProject(deleteId)
-    } catch {
-      // Error handling
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menghapus proyek')
     } finally {
       setLoading(false)
       setDeleteId(null)
@@ -47,6 +49,11 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
 
   return (
     <>
+      {error && (
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive mb-4">
+          {error}
+        </div>
+      )}
       <div className="rounded-lg border">
         <Table>
           <TableHeader>

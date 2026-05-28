@@ -42,10 +42,16 @@ export default async function HomePage() {
   const isVisible = (key: string) => (siteSettings[key] ?? 'true') === 'true'
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-500 selection:bg-primary/30">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-500 selection:bg-primary/30 relative">
+      {/* Global Ambient Retro Grid Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_40%,transparent_100%)]"></div>
+      </div>
+
       {isVisible('section_hero') && <HeroSection profile={profile} siteSettings={siteSettings} />}
       
-      <main className="container mx-auto px-4 md:px-8 py-8 lg:py-12 flex flex-col gap-16 lg:gap-24">
+      <main className="container mx-auto px-4 md:px-8 py-8 lg:py-12 flex flex-col gap-16 lg:gap-24 relative z-10">
         {/* The Bento Identity */}
         {isVisible('section_profile') && (
           <BentoProfile profile={profile} resumeUrl={activeResume?.file_url ?? null} educations={educations} technologies={technologies} skills={skills} siteSettings={siteSettings} />
@@ -57,14 +63,14 @@ export default async function HomePage() {
         )}
         
 
-        {/* Certificates & Achievements */}
-        {isVisible('section_certificates') && certificates && certificates.length > 0 && (
-          <CertificatesSection certificates={certificates} />
-        )}
-
         {/* Experience Section */}
         {isVisible('section_experience') && experiences && experiences.length > 0 && (
           <ExperienceSection experiences={experiences} />
+        )}
+
+        {/* Certificates & Achievements */}
+        {isVisible('section_certificates') && certificates && certificates.length > 0 && (
+          <CertificatesSection certificates={certificates} />
         )}
 
         {/* Services Section */}
@@ -79,7 +85,7 @@ export default async function HomePage() {
       </main>
 
       {isVisible('section_footer') && (
-        <div className="container mx-auto px-4 md:px-8 pb-12">
+        <div className="container mx-auto px-4 md:px-8 pb-12 relative z-10">
           <FooterSection profile={profile} siteSettings={siteSettings} />
         </div>
       )}

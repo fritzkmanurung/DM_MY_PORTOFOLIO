@@ -10,7 +10,6 @@ const SECTIONS = [
   { key: 'section_hero', label: 'Hero Section', description: 'Halaman pembuka dengan judul utama' },
   { key: 'section_profile', label: 'Profil (Bento Grid)', description: 'Identitas, pendidikan, skills, dan kontak' },
   { key: 'section_projects', label: 'Proyek', description: 'Galeri proyek dengan filter dan statistik GitHub' },
-  { key: 'section_skills', label: 'Teknologi & Tools', description: 'Marquee teknologi yang dikuasai' },
   { key: 'section_certificates', label: 'Sertifikat & Prestasi', description: 'Daftar sertifikat dan pencapaian' },
   { key: 'section_experience', label: 'Pengalaman', description: 'Timeline riwayat karir' },
   { key: 'section_services', label: 'Layanan', description: 'Layanan yang ditawarkan' },
@@ -38,11 +37,13 @@ export function SettingsForm({ settings }: SettingsFormProps) {
     setLoading(true)
     setMessage(null)
     try {
-      // Save section visibility
-      for (const section of SECTIONS) {
-        const value = localSettings[section.key] ?? 'true'
-        await updateSiteSetting(section.key, value)
-      }
+      // Save section visibility (parallel)
+      await Promise.all(
+        SECTIONS.map((section) => {
+          const value = localSettings[section.key] ?? 'true'
+          return updateSiteSetting(section.key, value)
+        })
+      )
       setMessage({ type: 'success', text: 'Pengaturan berhasil disimpan!' })
     } catch (err) {
       setMessage({ type: 'error', text: err instanceof Error ? err.message : 'Terjadi kesalahan' })

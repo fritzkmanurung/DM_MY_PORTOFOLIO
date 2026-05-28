@@ -58,7 +58,7 @@ export function ServicesManager({ services }: ServicesManagerProps) {
         <Button onClick={() => { setShowForm(true); setEditingId(null) }} className="gap-2"><Plus className="h-4 w-4" /> Tambah Layanan</Button>
       </div>
       {(showForm || editingId) && (
-        <Card><CardHeader><CardTitle>{editingId ? 'Edit Layanan' : 'Tambah Layanan Baru'}</CardTitle></CardHeader>
+        <Card key={editingId ?? 'new'}><CardHeader><CardTitle>{editingId ? 'Edit Layanan' : 'Tambah Layanan Baru'}</CardTitle></CardHeader>
           <CardContent>
             <form action={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">

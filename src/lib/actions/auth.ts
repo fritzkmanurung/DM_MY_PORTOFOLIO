@@ -9,7 +9,15 @@ export async function login(formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  if (!email || !email.trim()) {
+    return { error: 'Email harus diisi' }
+  }
+
+  if (!password || password.length < 6) {
+    return { error: 'Password harus minimal 6 karakter' }
+  }
+
+  const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
 
   if (error) {
     return { error: error.message }
@@ -26,6 +34,10 @@ export async function logout() {
 
 export async function getUser() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user }, error } = await supabase.auth.getUser()
+  if (error) {
+    console.error('Auth getUser error:', error.message)
+    return null
+  }
   return user
 }

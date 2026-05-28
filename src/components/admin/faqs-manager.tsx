@@ -57,7 +57,7 @@ export function FaqsManager({ faqs }: FaqsManagerProps) {
         <Button onClick={() => { setShowForm(true); setEditingId(null) }} className="gap-2"><Plus className="h-4 w-4" /> Tambah FAQ</Button>
       </div>
       {(showForm || editingId) && (
-        <Card><CardHeader><CardTitle>{editingId ? 'Edit FAQ' : 'Tambah FAQ Baru'}</CardTitle></CardHeader>
+        <Card key={editingId ?? 'new'}><CardHeader><CardTitle>{editingId ? 'Edit FAQ' : 'Tambah FAQ Baru'}</CardTitle></CardHeader>
           <CardContent>
             <form action={handleSubmit} className="space-y-4">
               <FormField label="Pertanyaan" name="question" defaultValue={editingItem?.question ?? ''} placeholder="Layanan apa yang Anda tawarkan?" required />
