@@ -31,9 +31,9 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
   const name = profile?.full_name || 'Your Name'
   const firstName = name.split(' ')[0]
 
-  // Get exactly 7 technologies: 2 Backend, 1 Database, 1 AI/ML, 1 Frontend, 2 Tools
+  // Get exactly 8 technologies: 3 Backend, 1 Database, 1 AI/ML, 1 Frontend, 2 Tools
   const getDisplayTechnologies = () => {
-    const backend = technologies.filter(t => t.category === 'Backend').slice(0, 2)
+    const backend = technologies.filter(t => t.category === 'Backend').slice(0, 3)
     const database = technologies.filter(t => t.category === 'Database').slice(0, 1)
     const aiml = technologies.filter(t => t.category === 'AI/ML').slice(0, 1)
     const frontend = technologies.filter(t => t.category === 'Frontend').slice(0, 1)
