@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, ExternalLink, ShieldCheck, Calendar, Building2 } from 'lucide-react'
 import type { Certificate } from '@/lib/types'
 
 const formatIssueDate = (dateStr: string) => {
@@ -248,7 +248,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
       {/* Certificate Zoom Modal */}
       <AnimatePresence>
         {selectedCert && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6">
+          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-6">
             {/* Backdrop */}
             <motion.div 
               initial={{ opacity: 0 }}
@@ -269,16 +269,16 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
               {/* Close Button */}
               <button 
                 onClick={() => setSelectedCert(null)}
-                className="absolute top-4 right-4 z-50 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center text-zinc-400 hover:text-white border border-white/10 transition-colors cursor-pointer"
+                className="absolute top-4 right-4 z-50 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md hover:bg-black/80 flex items-center justify-center text-zinc-400 hover:text-white border border-white/10 transition-all duration-300 hover:scale-110 cursor-pointer shadow-md"
                 title="Tutup"
               >
-                <span className="text-xs font-bold font-mono">✕</span>
+                <X className="w-4 h-4" />
               </button>
 
               {/* Certificate Image Frame */}
-              <div className="relative flex-1 bg-[#121214] p-4 flex items-center justify-center overflow-hidden min-h-[300px]">
+              <div className="relative flex-1 bg-gradient-to-b from-[#121214] to-[#09090b] p-6 md:p-8 flex items-center justify-center overflow-hidden min-h-[300px]">
                 {selectedCert.image_url ? (
-                  <div className="relative w-full aspect-[4/3] max-h-[70vh]">
+                  <div className="relative w-full aspect-[4/3] max-h-[60vh] shadow-[0_8px_30px_rgba(0,0,0,0.6)] border border-white/5 rounded-lg overflow-hidden">
                     <Image 
                       src={selectedCert.image_url} 
                       alt={selectedCert.title} 
@@ -290,24 +290,46 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
                 ) : (
                   <div className="text-zinc-600 text-sm font-bold uppercase tracking-widest">No Image</div>
                 )}
+                {/* Subtle top/bottom shadow gradients */}
+                <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
               </div>
 
               {/* Info & Action Bar */}
-              <div className="p-5 bg-[#121214] border-t border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 flex-shrink-0">
-                <div>
-                  <h3 className="font-bold text-white text-sm md:text-base leading-tight mb-1">{selectedCert.title}</h3>
-                  <p className="text-zinc-400 text-xs">{selectedCert.issuer} {selectedCert.issue_date && `• ${formatIssueDate(selectedCert.issue_date)}`}</p>
+              <div className="p-6 md:px-8 bg-[#121214] border-t border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 flex-shrink-0">
+                <div className="flex flex-col gap-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-md flex items-center gap-1 w-fit">
+                      <ShieldCheck className="w-3 h-3" />
+                      Kredensial Terverifikasi
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-white text-base md:text-lg leading-tight tracking-tight">{selectedCert.title}</h3>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                    <span className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
+                      <Building2 className="w-3.5 h-3.5 text-zinc-500" />
+                      {selectedCert.issuer}
+                    </span>
+                    {selectedCert.issue_date && (
+                      <span className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
+                        <Calendar className="w-3.5 h-3.5 text-zinc-500" />
+                        {formatIssueDate(selectedCert.issue_date)}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 
                 {selectedCert.credential_url && (
-                  <a 
-                    href={selectedCert.credential_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-5 py-2 bg-white text-black font-bold text-xs rounded-full hover:bg-zinc-200 transition-colors flex-shrink-0"
-                  >
-                    Verifikasi Kredensial
-                  </a>
+                  <div className="flex-shrink-0 flex items-center">
+                    <a 
+                      href={selectedCert.credential_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-white text-black font-bold text-xs rounded-full hover:bg-zinc-200 transition-all duration-300 shadow-[0_4px_12px_rgba(255,255,255,0.05)] w-full sm:w-auto justify-center"
+                    >
+                      Verifikasi Kredensial <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
                 )}
               </div>
             </motion.div>

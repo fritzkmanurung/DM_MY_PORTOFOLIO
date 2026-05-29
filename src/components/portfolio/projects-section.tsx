@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
-import { Code, Calendar, Activity, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Code, Calendar, Activity, Clock, ChevronLeft, ChevronRight, X, ExternalLink } from 'lucide-react'
 import { GithubIcon } from '@/components/icons'
 import type { ProjectWithDetails, ProjectCategory } from '@/lib/types'
 
@@ -253,9 +253,12 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
                 <GithubIcon className="w-4 h-4 text-zinc-400" />
                 <span className="text-[10px] font-bold tracking-widest text-zinc-400 uppercase">Statistik GitHub</span>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 {stats.map((stat, idx) => (
-                  <div key={idx} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-3">
+                  <div 
+                    key={idx} 
+                    className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-3 hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 hover:-translate-y-0.5"
+                  >
                     <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0">
                       <stat.icon className="w-3.5 h-3.5 text-zinc-400" />
                     </div>
@@ -429,7 +432,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
       {/* Detail Modal Overlay */}
       <AnimatePresence>
         {selectedProject && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6">
+          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-6">
             {/* Backdrop */}
             <motion.div 
               initial={{ opacity: 0 }}
@@ -450,20 +453,20 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
               {/* Close Button */}
               <button 
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-3.5 right-3.5 z-50 w-7 h-7 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center text-zinc-400 hover:text-white border border-white/10 transition-colors cursor-pointer"
+                className="absolute top-4 right-4 z-50 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md hover:bg-black/80 flex items-center justify-center text-zinc-400 hover:text-white border border-white/10 transition-all duration-300 hover:scale-110 cursor-pointer shadow-md"
                 title="Tutup"
               >
-                <span className="text-xs font-bold font-mono">✕</span>
+                <X className="w-4 h-4" />
               </button>
 
               {/* Browser Mockup Area */}
               <div className="relative aspect-[16/9] bg-[#121214] border-b border-white/10 overflow-hidden flex flex-col flex-shrink-0">
                 {/* Browser Mockup Header */}
-                <div className="h-5 bg-[#1a1a1e] border-b border-white/5 flex items-center px-4 gap-1.5 flex-shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#ef4444]/60" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#eab308]/60" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]/60" />
-                  <span className="ml-2 flex-1 bg-white/[0.03] rounded h-3.5 flex items-center px-2 text-[7px] text-zinc-500 font-mono truncate">
+                <div className="h-6 bg-[#1a1a1e] border-b border-white/5 flex items-center px-4 gap-1.5 flex-shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-[#ef4444]/60" />
+                  <span className="w-2 h-2 rounded-full bg-[#eab308]/60" />
+                  <span className="w-2 h-2 rounded-full bg-[#22c55e]/60" />
+                  <span className="ml-2 flex-1 bg-white/[0.03] rounded-md h-4 flex items-center px-3 text-[8px] text-zinc-500 font-mono truncate">
                     {selectedProject.live_url ? selectedProject.live_url.replace(/^https?:\/\//, '') : `${selectedProject.title.toLowerCase().replace(/\s+/g, '-')}.com`}
                   </span>
                 </div>
@@ -481,17 +484,20 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
                   ) : (
                     <div className="flex h-full items-center justify-center text-zinc-600 text-xs font-bold uppercase tracking-widest">No Preview</div>
                   )}
+                  {/* Subtle top/bottom shadow gradients for premium depth */}
+                  <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
+                  <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
                 </div>
               </div>
 
               {/* Content Area */}
-              <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-4 custom-scrollbar">
+              <div className="p-6 md:p-8 overflow-y-auto flex-1 flex flex-col gap-4 custom-scrollbar">
                 {/* Tech Stack */}
-                <div className="flex gap-1.5 flex-wrap">
+                <div className="flex gap-2 flex-wrap">
                   {selectedProject.technologies?.map((tech, idx) => (
                     <span 
                       key={idx} 
-                      className="bg-white/5 text-zinc-400 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-md border border-white/5"
+                      className="bg-white/5 text-zinc-300 text-[10px] tracking-wider font-semibold uppercase px-2.5 py-1 rounded-md border border-white/5 transition-colors hover:bg-white/10"
                     >
                       {tech.name}
                     </span>
@@ -499,39 +505,41 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-bold text-white leading-tight">
+                <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight">
                   {selectedProject.title}
                 </h3>
 
                 {/* Full Description */}
-                <p className="text-zinc-300 text-xs md:text-sm leading-relaxed whitespace-pre-line">
+                <p className="text-zinc-300 text-xs md:text-sm leading-relaxed whitespace-pre-line font-normal text-justify">
                   {selectedProject.description}
                 </p>
               </div>
 
-              {/* Footer / Actions */}
-              <div className="p-4 bg-[#121214] border-t border-white/10 flex flex-wrap gap-3 justify-end flex-shrink-0">
-                {selectedProject.repo_url && (
-                  <a 
-                    href={selectedProject.repo_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 text-white font-bold text-xs rounded-full hover:bg-white/10 transition-colors"
-                  >
-                    <GithubIcon className="w-3.5 h-3.5" /> Repositori Code
-                  </a>
-                )}
-                {selectedProject.live_url && (
-                  <a 
-                    href={selectedProject.live_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-black font-bold text-xs rounded-full hover:bg-zinc-200 transition-colors"
-                  >
-                    Kunjungi Website
-                  </a>
-                )}
-              </div>
+              {/* Footer / Actions - only render if there is at least one link */}
+              {(selectedProject.repo_url || selectedProject.live_url) && (
+                <div className="p-4 md:px-8 bg-[#121214] border-t border-white/10 flex flex-wrap gap-3 justify-end flex-shrink-0">
+                  {selectedProject.repo_url && (
+                    <a 
+                      href={selectedProject.repo_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 text-white font-bold text-xs rounded-full hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                    >
+                      <GithubIcon className="w-3.5 h-3.5" /> Repositori Code
+                    </a>
+                  )}
+                  {selectedProject.live_url && (
+                    <a 
+                      href={selectedProject.live_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-white text-black font-bold text-xs rounded-full hover:bg-zinc-200 transition-all duration-300 shadow-[0_4px_12px_rgba(255,255,255,0.05)]"
+                    >
+                      Kunjungi Website <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+              )}
             </motion.div>
           </div>
         )}

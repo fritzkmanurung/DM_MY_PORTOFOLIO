@@ -305,7 +305,7 @@ export async function getExperiences() {
   const { data, error } = await supabase
     .from('experiences')
     .select('*')
-    .order('sort_order', { ascending: true })
+    .order('start_date', { ascending: false })
 
   if (error) throw new Error(error.message)
   return data ?? []
