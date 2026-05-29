@@ -38,6 +38,10 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontSerif.variable} ${fontDisplay.variable} h-full antialiased dark`}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://cdn.simpleicons.org" />
+        <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <SmoothScroll>
           {children}
