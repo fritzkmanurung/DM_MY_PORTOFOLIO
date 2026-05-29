@@ -379,6 +379,7 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
               fill
               sizes="100vw"
               className="object-cover opacity-15 pointer-events-none" 
+              priority
             />
             {/* Optional gradient overlay to ensure text readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f11] via-[#0f0f11]/60 to-[#0f0f11]/20 pointer-events-none"></div>

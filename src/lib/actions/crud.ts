@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createPublicClient } from '@/lib/supabase/server'
 import { getUser } from './auth'
 import type { ProfileFormData, ProjectFormData, TechnologyFormData, ExperienceFormData, EducationFormData, ServiceFormData, CertificateFormData, FaqFormData, SkillFormData } from '@/lib/types'
 
@@ -10,7 +10,7 @@ import type { ProfileFormData, ProjectFormData, TechnologyFormData, ExperienceFo
 // =============================================================
 
 export async function getProfile() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
@@ -45,7 +45,7 @@ export async function updateProfile(formData: ProfileFormData) {
 // =============================================================
 
 export async function getProjects() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('projects')
     .select('*, project_techs(tech_id, technologies(*)), project_category_links(category_id, project_categories(*))')
@@ -82,7 +82,7 @@ export async function getProjects() {
 }
 
 export async function getProject(id: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('projects')
     .select('*, project_techs(tech_id), project_category_links(category_id)')
@@ -194,7 +194,7 @@ export async function deleteProject(id: string) {
 import type { ProjectCategoryFormData } from '@/lib/types'
 
 export async function getProjectCategories() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('project_categories')
     .select('*')
@@ -250,7 +250,7 @@ export async function deleteProjectCategory(id: string) {
 // =============================================================
 
 export async function getTechnologies() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('technologies')
     .select('*')
@@ -301,7 +301,7 @@ export async function deleteTechnology(id: string) {
 // =============================================================
 
 export async function getExperiences() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('experiences')
     .select('*')
@@ -354,7 +354,7 @@ export async function deleteExperience(id: string) {
 // =============================================================
 
 export async function getEducations() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('educations')
     .select('*')
@@ -410,7 +410,7 @@ export async function deleteEducation(id: string) {
 // =============================================================
 
 export async function getServices() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('services')
     .select('*')
@@ -466,7 +466,7 @@ export async function deleteService(id: string) {
 // =============================================================
 
 export async function getCertificates() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('certificates')
     .select('*')
@@ -522,7 +522,7 @@ export async function deleteCertificate(id: string) {
 // =============================================================
 
 export async function getSkills() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('skills')
     .select('*')
@@ -578,7 +578,7 @@ export async function deleteSkill(id: string) {
 // =============================================================
 
 export async function getFaqs() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('faqs')
     .select('*')
@@ -634,7 +634,7 @@ export async function deleteFaq(id: string) {
 // =============================================================
 
 export async function getResumes() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('resumes')
     .select('*')
@@ -645,7 +645,7 @@ export async function getResumes() {
 }
 
 export async function getActiveResume() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('resumes')
     .select('*')
@@ -756,7 +756,7 @@ export async function updateProjectImage(projectId: string, imageUrl: string) {
 // =============================================================
 
 export async function getSiteSettings() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('site_settings')
     .select('*')

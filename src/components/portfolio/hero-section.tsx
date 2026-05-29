@@ -30,7 +30,7 @@ export function HeroSection({ profile, siteSettings }: HeroSectionProps) {
 
       {/* Top Label */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4">
-        <Image src="/profile/logo.webp" alt="Logo" width={24} height={24} className="object-contain opacity-80" />
+        <Image src="/profile/logo.webp" alt="Logo" width={24} height={24} className="object-contain opacity-80" priority />
         <span className="text-[9px] uppercase tracking-[0.4em] text-zinc-400 font-bold">
           {profile?.hero_tagline || 'Digital Portofolio'}
         </span>
