@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { Code, Calendar, Activity, Clock, ChevronLeft, ChevronRight, X, ExternalLink } from 'lucide-react'
 import { GithubIcon } from '@/components/icons'
@@ -230,7 +230,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
   return (
     <div className="w-full flex flex-col gap-8" id="works">
       {/* Section Header (Centered, Outside) */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -238,7 +238,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
       >
         <p className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">Karya Saya</p>
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight font-serif italic text-white">Proyek Saya</h2>
-      </motion.div>
+      </m.div>
 
       {/* Main Card Container */}
       <section className="w-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10 bg-[#121214]/50 backdrop-blur-lg p-8 md:p-10 relative">
@@ -316,7 +316,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
           </div>
 
           {/* Project Slider Container */}
-          <motion.div 
+          <m.div 
             key={activeFilter}
             ref={scrollRef}
             variants={containerVariants}
@@ -327,7 +327,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
           >
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((project) => (
-                <motion.div
+                <m.div
                   variants={cardVariants}
                   exit={{ opacity: 0, scale: 0.95 }}
                   key={project.id}
@@ -422,10 +422,10 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
                       </p>
                     </div>
                   </div>
-                </motion.div>
+                </m.div>
               ))}
             </AnimatePresence>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -434,7 +434,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
         {selectedProject && (
           <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-6">
             {/* Backdrop */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -443,7 +443,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
             />
 
             {/* Modal Content */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -540,7 +540,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
                   )}
                 </div>
               )}
-            </motion.div>
+            </m.div>
           </div>
         )}
       </AnimatePresence>

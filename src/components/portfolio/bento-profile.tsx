@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import Image from 'next/image'
 import { MapPin, Mail, CheckCircle2 } from 'lucide-react'
 import type { Profile, Education, Technology, Skill } from '@/lib/types'
@@ -151,7 +151,7 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
 
   return (
     <section id="profile" className="w-full">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -507,7 +507,7 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
           </div>
         </div>
 
-      </motion.div>
+      </m.div>
     </section>
   )
 }

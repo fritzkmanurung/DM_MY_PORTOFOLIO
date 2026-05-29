@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Playfair_Display, Bricolage_Grotesque } from "next/font/google";
 import { SmoothScroll } from "@/components/shared/smooth-scroll";
+import { FramerProvider } from "@/components/shared/framer-provider";
 import "./globals.css";
 
 
@@ -43,9 +44,11 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        <FramerProvider>
+          <SmoothScroll>
+            {children}
+          </SmoothScroll>
+        </FramerProvider>
       </body>
     </html>
   );

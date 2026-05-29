@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import Image from 'next/image'
 import type { Profile } from '@/lib/types'
 
@@ -17,7 +17,7 @@ export function HeroSection({ profile, siteSettings }: HeroSectionProps) {
   return (
     <section id="hero" className="relative min-h-screen bg-[#f8f8f8] overflow-hidden flex flex-col items-center justify-center">
       {/* 3D Object Behind Text */}
-      <motion.div
+      <m.div
         animate={{ rotate: 360 }}
         transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
         className="absolute w-[280px] h-[280px] md:w-[500px] md:h-[500px] opacity-40 pointer-events-none z-0"
@@ -26,7 +26,7 @@ export function HeroSection({ profile, siteSettings }: HeroSectionProps) {
         <div className="absolute inset-6 rounded-[40%] border-2 border-black/15 rotate-45"></div>
         <div className="absolute inset-14 rounded-[35%] border-2 border-black/10 rotate-[60deg]"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-400/30 to-transparent blur-3xl rounded-full"></div>
-      </motion.div>
+      </m.div>
 
       {/* Top Label */}
       <div className="absolute top-8 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4">
@@ -37,7 +37,7 @@ export function HeroSection({ profile, siteSettings }: HeroSectionProps) {
       </div>
 
       {/* Main Content - All Centered */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
@@ -62,7 +62,7 @@ export function HeroSection({ profile, siteSettings }: HeroSectionProps) {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </button>
         </a>
-      </motion.div>
+      </m.div>
 
       {/* Bottom Labels */}
       <div className="absolute bottom-8 left-8 z-10">

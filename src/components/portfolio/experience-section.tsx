@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import type { Experience } from '@/lib/types'
 
 interface ExperienceSectionProps {
@@ -17,7 +17,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
     <section className="px-6 py-16 md:py-32 relative" id="experience">
       <div className="mx-auto max-w-4xl relative z-10">
         {/* Section Header */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
@@ -25,7 +25,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
         >
           <p className="text-sm font-semibold text-primary uppercase tracking-widest">Perjalanan</p>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight font-serif italic">Pengalaman</h2>
-        </motion.div>
+        </m.div>
 
         {/* Timeline */}
         <div className="relative space-y-0">
@@ -33,7 +33,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
           <div className="absolute left-[27px] sm:left-1/2 top-4 bottom-4 w-[2px] -translate-x-1/2 bg-gradient-to-b from-primary via-primary/50 to-transparent rounded-full" />
 
           {experiences.map((exp, index) => (
-            <motion.div
+            <m.div
               key={exp.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -84,7 +84,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
 
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </div>

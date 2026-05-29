@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { Code2, PenTool, Pen, Monitor, Palette, Globe, Wrench, Layers } from 'lucide-react'
 import type { Service } from '@/lib/types'
 
@@ -17,7 +17,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
   return (
     <div className="w-full flex flex-col gap-8" id="services">
       {/* Section Header (Centered, Outside) */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -25,7 +25,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
       >
         <p className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">Penawaran</p>
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight font-serif italic text-white">Layanan</h2>
-      </motion.div>
+      </m.div>
 
       {/* Main Container */}
       <section className="w-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10 bg-[#121214]/50 backdrop-blur-lg p-8 md:p-12 relative">
@@ -35,7 +35,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
             {services.map((service, idx) => {
               const IconComponent = iconMap[service.icon_name || ''] || Code2
               return (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -48,7 +48,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
                   </div>
                   <h3 className="text-lg font-bold mb-2">{service.title}</h3>
                   <p className="text-zinc-400 text-sm leading-relaxed">{service.description}</p>
-                </motion.div>
+                </m.div>
               )
             })}
           </div>

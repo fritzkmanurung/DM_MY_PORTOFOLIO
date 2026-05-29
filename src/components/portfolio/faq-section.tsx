@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import type { FAQ } from '@/lib/types'
 
@@ -19,7 +19,7 @@ export function FaqSection({ faqs }: FaqSectionProps) {
   return (
     <div className="w-full flex flex-col gap-8" id="faq">
       {/* Section Header (Centered, Outside) */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -27,7 +27,7 @@ export function FaqSection({ faqs }: FaqSectionProps) {
       >
         <p className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">Tanya Jawab</p>
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight font-serif italic text-white">FAQ</h2>
-      </motion.div>
+      </m.div>
 
       {/* Main Container */}
       <section className="w-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10 bg-[#121214]/50 backdrop-blur-lg text-white p-8 md:p-12 relative">
@@ -48,7 +48,7 @@ export function FaqSection({ faqs }: FaqSectionProps) {
               </button>
               <AnimatePresence initial={false}>
                 {openIndex === idx && (
-                  <motion.div
+                  <m.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -57,7 +57,7 @@ export function FaqSection({ faqs }: FaqSectionProps) {
                     <div className="px-4.5 pb-4.5 text-zinc-300 text-xs md:text-sm leading-relaxed border-t border-white/5 pt-3">
                       {faq.answer}
                     </div>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>

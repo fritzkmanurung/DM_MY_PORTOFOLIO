@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight, X, ExternalLink, ShieldCheck, Calendar, Building2 } from 'lucide-react'
 import type { Certificate } from '@/lib/types'
@@ -138,7 +138,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
   return (
     <div className="w-full flex flex-col gap-8" id="certificates">
       {/* Section Header (Centered, Outside) */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -146,7 +146,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
       >
         <p className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">Pencapaian</p>
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight font-serif italic text-white">Sertifikat</h2>
-      </motion.div>
+      </m.div>
 
       {/* Slider Area (Unboxed, matching Projects card section width) */}
       <div className="w-full relative flex flex-col">
@@ -174,7 +174,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
         </div>
 
         {/* Scrollable Container with Snapping */}
-        <motion.div 
+        <m.div 
           ref={scrollRef}
           variants={containerVariants}
           initial="hidden"
@@ -183,7 +183,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
           className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-5 pb-6 no-scrollbar"
         >
           {certificates.map((cert) => (
-            <motion.div
+            <m.div
               variants={cardVariants}
               key={cert.id}
               className="w-[250px] sm:w-[290px] flex-shrink-0 snap-start h-full py-1"
@@ -240,9 +240,9 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
       </div>
 
       {/* Certificate Zoom Modal */}
@@ -250,7 +250,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
         {selectedCert && (
           <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-6">
             {/* Backdrop */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -259,7 +259,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
             />
 
             {/* Modal Content */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -332,7 +332,7 @@ export function CertificatesSection({ certificates }: CertificatesSectionProps) 
                   </div>
                 )}
               </div>
-            </motion.div>
+            </m.div>
           </div>
         )}
       </AnimatePresence>

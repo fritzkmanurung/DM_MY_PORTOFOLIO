@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { GithubIcon, LinkedinIcon, GmailIcon, InstagramIcon } from '@/components/icons'
 import { Globe, Clock } from 'lucide-react'
