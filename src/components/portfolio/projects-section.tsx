@@ -38,6 +38,8 @@ interface ProjectsSectionProps {
 
 export function ProjectsSection({ projects, categories, githubUsername }: ProjectsSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [hasIntersected, setHasIntersected] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -141,6 +143,32 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
 
   useEffect(() => {
     if (!githubUsername) return
+
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      setHasIntersected(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasIntersected(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '400px' }
+    )
+
+    const el = sectionRef.current
+    if (el) observer.observe(el)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [githubUsername])
+
+  useEffect(() => {
+    if (!hasIntersected || !githubUsername) return
     const username = githubUsername
     const CACHE_KEY = `github_stats_${username}`
     const CACHE_TTL = 60 * 60 * 1000 // 1 hour
@@ -208,7 +236,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
         sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data: fetchedStats, timestamp: Date.now() }))
       } catch { /* quota exceeded — ignore */ }
     })
-  }, [githubUsername])
+  }, [hasIntersected, githubUsername])
 
   const filters = ['SEMUA', ...categories.map(c => c.name)]
 
@@ -228,7 +256,7 @@ export function ProjectsSection({ projects, categories, githubUsername }: Projec
   })
 
   return (
-    <div className="w-full flex flex-col gap-8" id="works">
+    <div ref={sectionRef} className="w-full flex flex-col gap-8" id="works">
       {/* Section Header (Centered, Outside) */}
       <m.div
         initial={{ opacity: 0, y: 20 }}
