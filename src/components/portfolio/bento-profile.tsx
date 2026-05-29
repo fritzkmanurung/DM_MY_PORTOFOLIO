@@ -279,7 +279,9 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
             {/* Right: Bio & Info */}
             <div className="lg:w-[70%] p-8 md:p-12 flex flex-col justify-between">
               <div>
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-2">Halo, Nama Saya <span className="font-serif text-3xl md:text-5xl">{firstName}</span></h2>
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold tracking-tight mb-2">
+                  Halo, Nama Saya <span className="font-serif italic text-xl md:text-2xl lg:text-3xl text-zinc-100 font-semibold">{name}</span>
+                </h2>
                 <p className="text-zinc-300 text-sm font-medium mb-5">
                   {profile?.role_title || 'Developer'}
                 </p>
@@ -382,7 +384,9 @@ export function BentoProfile({ profile, resumeUrl, educations, technologies, ski
             <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f11] via-[#0f0f11]/60 to-[#0f0f11]/20 pointer-events-none"></div>
             
             <div className="relative z-10 p-6 pt-12 pb-10 flex flex-col">
-              <h2 className="text-2xl font-bold tracking-tight mb-2">Halo, Nama Saya <span className="font-serif text-2xl">{firstName}</span></h2>
+              <h2 className="text-lg sm:text-xl font-bold tracking-tight leading-tight mb-2">
+                Halo, Nama Saya <span className="font-serif italic text-lg sm:text-xl text-zinc-100 font-semibold">{name}</span>
+              </h2>
               <p className="text-zinc-300 text-sm font-medium mb-6">
                 {profile?.role_title || 'Developer'}
               </p>
